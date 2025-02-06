@@ -21,6 +21,8 @@ namespace MineCraftInventory
         int SLOT_HEIGHT = 5;
         int activeRow = 0;
         int activeColumn = 0;
+        int selectedRow = -1;
+        int selectedColumn = -1;
         int WINDOW_HEIGHT = 25;
         int WINDOW_WIDTH = 105;
 
@@ -50,6 +52,17 @@ namespace MineCraftInventory
             {
                 Console.SetCursorPosition(INVENTORY_AREA_LEFT + activeColumn * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + activeRow * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + i);
                 Console.WriteLine(new string(' ', SLOT_WIDTH));
+            }
+
+            //selected slot
+            if (selectedRow >= 0 && selectedColumn >= 0)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                for (int i = 0; i < SLOT_HEIGHT; i++)
+                {
+                    Console.SetCursorPosition(INVENTORY_AREA_LEFT + selectedColumn * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + selectedRow * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + i);
+                    Console.WriteLine(new string(' ', SLOT_WIDTH));
+                }
             }
 
             //paint white light
@@ -165,16 +178,19 @@ namespace MineCraftInventory
                     case 'y':
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         break;
+                    case 'b':
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        break;
                     default:
                         Console.BackgroundColor = ConsoleColor.Gray;
                         break;
                 }
-                if (item.Sprite[i]!='0') //if there is any colour to draw
+                if (item.Sprite[i] != '0') //if there is any colour to draw
                 {
                     Console.Write(" ");
                 }
             }
-            if (item.Ammount > 0)   //if there is a noticeable stack of items
+            if (item.Ammount > 1)   //if there is a noticeable stack of items
             {
                 Console.SetCursorPosition(Xcoor, Ycoor);
                 Console.Write(item.Ammount);
@@ -221,6 +237,8 @@ namespace MineCraftInventory
                     }
                     break;
                 case ConsoleKey.Enter:
+                    selectedColumn = activeColumn;
+                    selectedRow = activeRow;
                     break;
             }
         }

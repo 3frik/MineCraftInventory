@@ -14,9 +14,11 @@ namespace MineCraftInventory
         public Inventory() 
         { 
             items[0] = new Item();
-            items[0].Ammount = 13;
+            items[0].Ammount = 1;
             items[1] = new Item();
             items[1].Ammount = 37;
+            items[2] = new Weapon();
+            items[3] = new Potion();
         }
 
         public void Run()

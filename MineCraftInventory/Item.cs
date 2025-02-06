@@ -8,20 +8,47 @@ namespace MineCraftInventory
 {
     internal class Item
     {
-        private string sprite;  //9*5, info for 45 bits of color
-        public string Sprite { get { return sprite; } set { sprite = value; } }
-        private int ammount;
-        public int Ammount { get { return ammount; } set { ammount = value; } }
+        public string Sprite { get; set; }
+        public int Ammount;
         public Item()
         {
-            ammount = 0;
-            sprite =
-                "00000y00" +
+            Ammount = 1;
+            Sprite =
+                "00000b00" +
                 "00000yy0" +
                 "0yyyyyy0" +
-                "00yyyy00" ;
+                "00yyyy00";
 
         }
 
+    }
+
+    internal class Weapon : Item
+    {
+        public string Name;
+
+        public Weapon()
+        {
+            Ammount = 1;
+            Sprite =
+                "000bb0bb" +
+                "0000wbb0" +
+                "00ww00b0" +
+                "ww000000";
+        }
+
+    }
+
+    internal class Potion : Item
+    {
+        public Potion()
+        {
+            Ammount = 1;
+            Sprite =
+                "00wwww00" +
+                "000ww000" +
+                "00wrrw00" +
+                "0wrrrrw0";
+        }
     }
 }
