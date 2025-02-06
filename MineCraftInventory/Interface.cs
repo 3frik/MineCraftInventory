@@ -181,6 +181,9 @@ namespace MineCraftInventory
                     case 'b':
                         Console.BackgroundColor = ConsoleColor.Black;
                         break;
+                    case 'd':
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        break;
                     default:
                         Console.BackgroundColor = ConsoleColor.Gray;
                         break;

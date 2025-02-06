@@ -19,6 +19,8 @@ namespace MineCraftInventory
             items[1].Ammount = 37;
             items[2] = new Weapon();
             items[3] = new Potion();
+            items[4] = new Shield();
+            items[15] = new Apple();
         }
 
         public void Run()
@@ -34,5 +36,18 @@ namespace MineCraftInventory
             }
         }
 
+        public void AddItem(Item item)
+        {
+            //check if the item is in the inventory
+            if (item.isStackable)
+            {
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if (items[i] == item) {
+                        //items[i] += item.Ammount;
+                    }
+                } 
+            }
+        }
     }
 }
