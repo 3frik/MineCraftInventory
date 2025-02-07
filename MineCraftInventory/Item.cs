@@ -64,6 +64,10 @@ namespace MineCraftInventory
     /// </summary>
     internal class Equipment : Item
     {
+        public override void Use()
+        {
+            
+        }
 
     }
 
@@ -129,10 +133,40 @@ namespace MineCraftInventory
             MaxAmmount = 16;
             Sprite =
                 "00rrgr00" +
-                "0rrgrrr0" +
-                "0rrrrwr0" +
+                "0rrgrwr0" +
+                "0rrrrrr0" +
                 "00rrrr00";
         }
 
+    }
+
+    internal class Iron : Material
+    {
+        public Iron()
+        {
+            Ammount = 1;
+            isStackable = true;
+            MaxAmmount = 16;
+            Sprite =
+                "0000www0" +
+                "000wdddb" +
+                "00wdddb0" +
+                "0wdddb00";
+        }
+    }
+
+    internal class Wood : Material
+    {
+        public Wood()
+        {
+            Ammount = 1;
+            isStackable = true;
+            MaxAmmount = 16;
+            Sprite =
+                "000mm000" +
+                "0000mmmm" +
+                "00mmm000" +
+                "0mmm0000";
+        }
     }
 }

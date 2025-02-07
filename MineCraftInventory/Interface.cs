@@ -23,8 +23,12 @@ namespace MineCraftInventory
         int activeColumn = 0;
         int selectedRow = -1;
         int selectedColumn = -1;
-        int WINDOW_HEIGHT = 25;
+        int WINDOW_HEIGHT = 32;
         int WINDOW_WIDTH = 105;
+        int CRAFTING_AREA_TOP = 24;
+        int CRAFTING_AREA_LEFT = 58;
+        int EQUIPMENT_AREA_TOP = 24;
+        int EQUIPMENT_AREA_LEFT = 14;
 
 
         public Interface()
@@ -46,6 +50,7 @@ namespace MineCraftInventory
             }*/
             Console.Clear();
 
+            ///DRAW INVENTORY AREA (including backgrounds)
             //active slot
             Console.BackgroundColor = ConsoleColor.White;
             for (int i = 0; i < SLOT_HEIGHT; i++)
@@ -76,49 +81,70 @@ namespace MineCraftInventory
                 Console.SetCursorPosition(0, i);
                 Console.Write(" ");
             }
+
             //items slots
             for (int i = 0; i < INVENTORY_COLUMNS; i++)
             {
                 for (int j = 0; j < INVENTORY_ROWS; j++)
                 {
-                    Console.SetCursorPosition(INVENTORY_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + j * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + SLOT_HEIGHT);
-                    Console.Write(new string(' ', SLOT_WIDTH));
-                    for (int k = 0; k < 5; k++)
-                    {
-                        Console.SetCursorPosition(INVENTORY_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS) + SLOT_WIDTH, INVENTORY_AREA_TOP + j * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + k);
-                        Console.WriteLine(" ");
-                    }
+                    DrawSlotBorder(INVENTORY_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + j * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS));
                 }
             }
 
-            //paint dark shadow
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-            Console.SetCursorPosition(0, WINDOW_HEIGHT);
-            Console.Write(new string(' ', WINDOW_WIDTH));
-
-            for (int i = 0; i < WINDOW_HEIGHT + 1; i++)
+            ///DRAW CRAFTING AREA
+            for (int i = 0; i < 3; i++)
             {
-                Console.SetCursorPosition(WINDOW_WIDTH, i);
-                Console.Write(" ");
-            }
-            //items slots
-            for (int i = 0; i < INVENTORY_COLUMNS; i++)
-            {
-                for (int j = 0; j < INVENTORY_ROWS; j++)
-                {
-                    Console.SetCursorPosition(INVENTORY_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + j * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS));
-                    Console.Write(new string(' ', SLOT_WIDTH));
-                    for (int k = 0; k < 5; k++)
-                    {
-                        Console.SetCursorPosition(INVENTORY_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + j * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + k);
-                        Console.WriteLine(" ");
-                    }
-                }
+                DrawSlotBorder(CRAFTING_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), CRAFTING_AREA_TOP);
             }
 
+            ///DRAW EQUIPMENT AREA
+            for (int i = 0; i < 2; i++)
+            {
+                DrawSlotBorder(EQUIPMENT_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), EQUIPMENT_AREA_TOP);
+            }
+
+            ///DRAW EQUIPMENT AND CRAFTING ICONS
+            Item EquipmentIcon = new Item();
+            EquipmentIcon.Sprite =
+                "000bb000" +
+                "0bbwwbb0" +
+                "000bb000" +
+                "00b00b00";
+            Item CraftingIcon = new Item();
+            CraftingIcon.Sprite =
+                "0bbbbbb0" +
+                "0dddddb0" +
+                "000rr000" +
+                "000rr000";
+            DrawItem(3, EQUIPMENT_AREA_TOP + 1, EquipmentIcon);
+            DrawItem(CRAFTING_AREA_LEFT - SLOT_WIDTH - SPACE_BETWEEN_SLOTS, CRAFTING_AREA_TOP + 1, CraftingIcon);
 
             //Reset
             Console.BackgroundColor = ConsoleColor.Black;
+        }
+
+        private void DrawSlotBorder(int Xcoor, int Ycoor)
+        {
+            //Draw White
+            Console.BackgroundColor = ConsoleColor.White;
+            //items slots
+            Console.SetCursorPosition(Xcoor, Ycoor + SLOT_HEIGHT);
+            Console.Write(new string(' ', SLOT_WIDTH));
+            for (int k = 0; k < SLOT_HEIGHT; k++)
+            {
+                Console.SetCursorPosition(Xcoor + SLOT_WIDTH, Ycoor + k);
+                Console.WriteLine(" ");
+            }
+            //Draw Dark Grey
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            //items slots
+            Console.SetCursorPosition(Xcoor, Ycoor);
+            Console.Write(new string(' ', SLOT_WIDTH));
+            for (int k = 0; k < SLOT_HEIGHT; k++)
+            {
+                Console.SetCursorPosition(Xcoor, Ycoor + k);
+                Console.WriteLine(" ");
+            }
         }
 
         /// <summary>
@@ -143,10 +169,51 @@ namespace MineCraftInventory
             }
         }
 
+        /// Draws the items in the Craftingslots on screen
+        /// </summary>
+        /// <param name="items">Items to show</param>
+        public void DrawCraftingItems(Item[] items)
+        {
+            int columns = items.Length;
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i] != null)
+                {
+                    DrawItem(
+                        CRAFTING_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS) + 1,
+                        CRAFTING_AREA_TOP + 1,
+                        items[i]);
+                }
+            }
+        }
+
+        /// Draws the items in the Equipment slots on screen
+        /// </summary>
+        /// <param name="items">Items to show</param>
+        public void DrawEquipmentItems(Item[] items)
+        {
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i] != null)
+                {
+                    DrawItem(
+                        EQUIPMENT_AREA_LEFT + i * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS) + 1,
+                        EQUIPMENT_AREA_TOP + 1,
+                        items[i]);
+                }
+            }
+        }
+
         /// <summary>
         /// Draws the options in the menu adn asks to chose one
         /// </summary>
         public void DrawMenu()
+        {
+
+        }
+
+
+        public void DrawCraftingArea()
         {
 
         }
@@ -184,6 +251,9 @@ namespace MineCraftInventory
                     case 'd':
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                         break;
+                    case 'm':
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        break;
                     default:
                         Console.BackgroundColor = ConsoleColor.Gray;
                         break;
@@ -201,6 +271,9 @@ namespace MineCraftInventory
             Console.BackgroundColor = ConsoleColor.Gray;
         }
 
+        /// <summary>
+        /// Reads the key that is pressed
+        /// </summary>
         public void ReadPressedKey()
         {
             while (Console.KeyAvailable)
@@ -213,16 +286,36 @@ namespace MineCraftInventory
             {
                 case ConsoleKey.DownArrow:
                     activeRow++;
-                    if (activeRow == INVENTORY_ROWS)
+                    if (activeRow > INVENTORY_ROWS)
                     {
                         activeRow = 0;
                     }
+                    else if (activeRow == INVENTORY_ROWS)
+                    {
+                        if (activeColumn == 0 || activeColumn == 4)
+                        {
+                            activeColumn++;
+                        }
+                        else if (activeColumn == 3 || activeColumn == 8)
+                        {
+                            activeColumn--;
+                        }
+                    }
+
                     break;
                 case ConsoleKey.UpArrow:
                     activeRow--;
                     if (activeRow < 0)
                     {
-                        activeRow = INVENTORY_ROWS - 1;
+                        activeRow = INVENTORY_ROWS;
+                        if (activeColumn == 0 || activeColumn == 4)
+                        {
+                            activeColumn++;
+                        }
+                        else if (activeColumn == 3 || activeColumn == 8)
+                        {
+                            activeColumn--;
+                        }
                     }
                     break;
                 case ConsoleKey.RightArrow:
@@ -231,12 +324,34 @@ namespace MineCraftInventory
                     {
                         activeColumn = 0;
                     }
+                    if (activeRow == INVENTORY_ROWS)
+                    {
+                        if (activeColumn == 0 || activeColumn == 8)
+                        {
+                            activeColumn=1;
+                        }
+                        else if (activeColumn == 3 || activeColumn == 4)
+                        {
+                            activeColumn=5;
+                        }
+                    }
                     break;
                 case ConsoleKey.LeftArrow:
                     activeColumn--;
                     if (activeColumn < 0)
                     {
                         activeColumn = INVENTORY_COLUMNS - 1;
+                    }
+                    if (activeRow == INVENTORY_ROWS)
+                    {
+                        if (activeColumn == 3 || activeColumn == 4)
+                        {
+                            activeColumn = 2;
+                        }
+                        else if (activeColumn == 0 || activeColumn == 8)
+                        {
+                            activeColumn = 7;
+                        }
                     }
                     break;
                 case ConsoleKey.Enter:

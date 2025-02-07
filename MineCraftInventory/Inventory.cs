@@ -9,6 +9,8 @@ namespace MineCraftInventory
     internal class Inventory
     {
         private Item[] items=new Item[27];
+        private Item[] equipments = new Item[2];
+        private Item[] craftings = new Item[3];
         private Interface iface = new Interface();
 
         public Inventory() 
@@ -21,6 +23,9 @@ namespace MineCraftInventory
             items[3] = new Potion();
             items[4] = new Shield();
             items[15] = new Apple();
+            equipments[0] = new Weapon();
+            craftings[0] = new Iron();
+            craftings[1] = new Wood();
         }
 
         public void Run()
@@ -30,6 +35,8 @@ namespace MineCraftInventory
             {
                 iface.DrawWindow();
                 iface.DrawInventory(items);
+                iface.DrawCraftingItems(craftings);
+                iface.DrawEquipmentItems(equipments);
                 iface.DrawMenu();
                 iface.ReadPressedKey();
 
