@@ -205,17 +205,21 @@ namespace MineCraftInventory
         }
 
         /// <summary>
-        /// Draws the options in the menu adn asks to chose one
+        /// Returns the index of the active index. 
+        /// If the item is on the Equipment or Crafting slot, it returns a negative index as follows:
+        /// -Equipment slots: -1, -2
+        /// -Crafting slots: -5,-6,-7
         /// </summary>
-        public void DrawMenu()
+        /// <returns></returns>
+        public int ActiveItemIndex()
         {
-
-        }
-
-
-        public void DrawCraftingArea()
-        {
-
+            int activeIndex = activeColumn + activeRow * INVENTORY_COLUMNS;
+            if (activeIndex > INVENTORY_COLUMNS * (INVENTORY_ROWS))
+            {
+                activeIndex -= INVENTORY_COLUMNS * (INVENTORY_ROWS);
+                activeIndex *= -1;
+            }
+            return activeIndex;
         }
 
         /// <summary>
@@ -274,15 +278,9 @@ namespace MineCraftInventory
         /// <summary>
         /// Reads the key that is pressed
         /// </summary>
-        public void ReadPressedKey()
+        public void MoveInventory(ConsoleKey pressedKey)
         {
-            while (Console.KeyAvailable)
-            {
-                Console.ReadKey();
-            }
-            while (!Console.KeyAvailable) { }
-
-            switch (Console.ReadKey(true).Key)
+            switch (pressedKey)
             {
                 case ConsoleKey.DownArrow:
                     activeRow++;

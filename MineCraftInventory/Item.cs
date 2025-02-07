@@ -52,11 +52,7 @@ namespace MineCraftInventory
     /// </summary>
     internal class Material : Item
     {
-        public override void Use()
-        {
-            Console.WriteLine("Ýou use this material.");
-            Ammount--;
-        }
+
     }
 
     /// <summary>
@@ -111,9 +107,9 @@ namespace MineCraftInventory
     /// </summary>
     internal class Potion : Consumable
     {
-        public Potion()
+        public Potion(int ammount =1)
         {
-            Ammount = 1;
+            Ammount = ammount;
             isStackable = true;
             MaxAmmount = 16;
             Sprite =
@@ -122,15 +118,21 @@ namespace MineCraftInventory
                 "00wrrw00" +
                 "0wrrrrw0";
         }
+
+        public override void Use()
+        {
+            this.Ammount--;
+            Console.Beep(300, 300);
+        }
     }
 
     internal class Apple : Consumable
     {
-        public Apple()
+        public Apple(int ammount =1)
         {
-            Ammount = 1;
+            Ammount = ammount;
             isStackable = true;
-            MaxAmmount = 16;
+            MaxAmmount = 64;
             Sprite =
                 "00rrgr00" +
                 "0rrgrwr0" +
@@ -142,11 +144,11 @@ namespace MineCraftInventory
 
     internal class Iron : Material
     {
-        public Iron()
+        public Iron(int ammount = 1)
         {
-            Ammount = 1;
+            Ammount = ammount;
             isStackable = true;
-            MaxAmmount = 16;
+            MaxAmmount = 64;
             Sprite =
                 "0000www0" +
                 "000wdddb" +
@@ -157,11 +159,11 @@ namespace MineCraftInventory
 
     internal class Wood : Material
     {
-        public Wood()
+        public Wood(int ammount =1)
         {
-            Ammount = 1;
+            Ammount = ammount;
             isStackable = true;
-            MaxAmmount = 16;
+            MaxAmmount = 64;
             Sprite =
                 "000mm000" +
                 "0000mmmm" +
