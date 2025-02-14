@@ -19,6 +19,7 @@ namespace MineCraftInventory
             AddItemToInventory(new Wood(20));
             AddItemToInventory(new Wood(30));
             AddItemToInventory(new Potion());
+            AddItemToInventory(new Wood(500));
             AddItemToInventory(new Wood(30));
             AddItemToInventory(new Shield());
             AddItemToInventory(new Iron(30));
@@ -28,6 +29,8 @@ namespace MineCraftInventory
         public void Run()
         {
             bool inventorying = true;
+            Console.WriteLine("Doing");
+            Console.ReadKey();
             while (inventorying)
             {
                 iface.DrawWindow();
@@ -49,29 +52,39 @@ namespace MineCraftInventory
             {
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (items[i] == item && !(items[i].Ammount < items[i].MaxAmmount))
-                    {   //if the item is in the inventory and there is place for more items
-                        items[i].Ammount += item.Ammount;   //then add the items
-                        if (items[i].Ammount < items[i].MaxAmmount) //but if you put too many items, over MAX
+                    if (items[i] != null)   //Check for every item that is there in the inventory
+                    {
+
+                        bool isSameItem = items[i].Name == item.Name;
+                        bool isFull = items[i].Ammount >= items[i].MaxAmmount;
+                        if (isSameItem && !isFull)  //if the item is of the same type and there is room for more items
                         {
-                            item.Ammount = items[i].Ammount - items[i].MaxAmmount;  //then you have some items left to add to the inventory
-                            items[i].Ammount = items[i].MaxAmmount; //and the stack becomes full
-                        }
-                        else //but if you instead dont get to MAX
-                        {
-                            item.Ammount = 0; //empty the ammount fo items
-                            break;
+                            items[i].Ammount += item.Ammount;   //then add ALL the items
+                            if (items[i].Ammount > items[i].MaxAmmount) //but if you put too many items, over MAX
+                            {
+                                item.Ammount = items[i].Ammount - items[i].MaxAmmount;  //then you have some items left to add to the inventory in some other way
+                                items[i].Ammount = items[i].MaxAmmount; //and the stack becomes full
+                            }
+                            else //but if you instead dont get to MAX
+                            {
+                                item.Ammount = 0; //empty the ammount fo items
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            // if the item is not stackable or it has not been able to put all its stack in existing stacks
+            }   //if the item is not stackable OR it is, but all stacks have been fully stacked
             for (int i = 0; i < items.Length; i++)
             {
-                if (items[i] == null)   //the first empty slot
+                if (item.Ammount > 0 && items[i] == null)   //as long there are items to save and an empty slot is found
                 {
-                    items[i] = item;    //becomes the item
-                    break;
+                    items[i] = (Item)Activator.CreateInstance(item.GetType(), new object[] {item.Ammount});    //create in the slot a new item      
+                    items[i].Ammount = item.Ammount;    //dump all items in the slot
+                    item.Ammount -= items[i].MaxAmmount;    //Remove a whole stack from the original item (may become negative)
+                    if (items[i].Ammount > items[i].MaxAmmount) //if we had dumped more than a stack
+                    {
+                        items[i].Ammount = items[i].MaxAmmount; //adjust the ammount to the stack
+                    }
                 }
             }
 
@@ -84,7 +97,7 @@ namespace MineCraftInventory
         private void RemoveItemFromInventory(int inventoryIndex, int ammountToRemove = 1)
         {
             items[inventoryIndex].Ammount -= ammountToRemove;
-            
+
             if (items[inventoryIndex].Ammount < 1)
             {
                 items[inventoryIndex] = null;
@@ -118,24 +131,43 @@ namespace MineCraftInventory
         }
 
 
-    /// <summary>
-    /// Adds an item to the craftings inventory. The item should be of tipe material
-    /// </summary>
-    /// <param name="item"></param>
+        /// <summary>
+        /// Adds an item to the craftings inventory. The item should be of tipe material
+        /// </summary>
+        /// <param name="item"></param>
         private void AddItemToCrafting(Item item, int ammountToAdd = 1)
         {
-            for (int i = 0; i < craftings.Length; i++)
+            for (int i = 0; i < craftings.Length-1; i++)
             {
                 if (craftings[i] == null)
                 {   //if the item is in the inventory and there is place for more items
-                    Console.WriteLine(" vs "+item.Ammount );
-                    craftings[i] = item;    
+                    Console.WriteLine(" vs " + item.Ammount);
+                    craftings[i] = item;                                        ////////THIS IS NOT DOING A COPY BUT A REFERENCE
                     craftings[i].Ammount = ammountToAdd;
                     Console.ReadKey();
                     break;
                 }
             }
-
+            if (craftings[0]!=null && craftings[1]!=null){
+                List<Type> types = new();
+                types.Add(craftings[0].GetType());
+                types.Add(craftings[1].GetType()) ;
+                if(types.Contains(new Iron().GetType()))
+                {
+                    if(types.Contains(new Wood().GetType()))
+                    {
+                        craftings[2] = new Shield();
+                    }
+                    else
+                    {
+                        craftings[2] = new Weapon();
+                    }
+                }
+            }
+            else
+            {
+                craftings[2] = null;
+            }
         }
 
         /// <summary>
@@ -157,17 +189,18 @@ namespace MineCraftInventory
             int itemIndex = iface.ActiveItemIndex();
             if (itemIndex > -1)
             {
-                return items[itemIndex];
+                
+               return items[itemIndex];
             }
-            else if (itemIndex > -3)
+            else if (itemIndex > -3) // this item is in the equipment inventory
             {
                 itemIndex++;
                 itemIndex *= -1;
                 return equipments[itemIndex];
             }
-            else
+            else    //This item is in the crafting inventory
             {
-                itemIndex += 4;
+                itemIndex += 5;
                 itemIndex *= -1;
                 return craftings[itemIndex];
             }
@@ -195,7 +228,18 @@ namespace MineCraftInventory
                     break;
                 case ConsoleKey.Enter:
                     iface.MoveInventory(pressedKey);
-                    UseItem(SelectActiveItem());
+                    switch (iface.ActiveItemIndex())
+                    {
+                        case > -1:
+                            UseItem(SelectActiveItem());
+                            break;
+                        case > -3:
+                            RemoveItemFromEquipment(iface.ActiveItemIndexInEquipmentInventory());
+                            break;
+                        case > -8:
+                            RemoveItemFromCrafting(iface.ActiveItemIndexInCraftingInventory());
+                            break;
+                    }
                     break;
             }
 
@@ -203,14 +247,15 @@ namespace MineCraftInventory
 
         private void UseItem(Item item)
         {
-            if(item is Equipment)
+            if (item is Equipment)
             {
                 AddItemToEquipment(item);
                 RemoveItemFromInventory(iface.ActiveItemIndex());
-            }else if(item is Material)
+            }
+            else if (item is Material)
             {
-                AddItemToCrafting(item,1);
-                RemoveItemFromInventory(iface.ActiveItemIndex(),1);
+                AddItemToCrafting(item, 1);
+                RemoveItemFromInventory(iface.ActiveItemIndex(), 1);
             }
         }
     }

@@ -16,10 +16,11 @@ namespace MineCraftInventory
         public int Ammount;
         public bool isStackable = false;
         public int MaxAmmount = 1;
+        public string Name;
         public Item()
         {
             Ammount = 1;
-           
+
             Sprite =
                 "00000b00" +
                 "00000yy0" +
@@ -62,7 +63,7 @@ namespace MineCraftInventory
     {
         public override void Use()
         {
-            
+
         }
 
     }
@@ -74,9 +75,10 @@ namespace MineCraftInventory
     {
         public string Name;
 
-        public Weapon()
+        public Weapon(int ammount = 1)
         {
-            Ammount = 1;
+            Ammount = ammount;
+            Name = "weapon";
             Sprite =
                 "000bb0bb" +
                 "0000wbb0" +
@@ -91,9 +93,10 @@ namespace MineCraftInventory
     /// </summary>
     internal class Shield : Equipment
     {
-        public Shield()
+        public Shield(int ammount = 1)
         {
-            Ammount = 1;
+            Ammount = ammount;
+            Name = "Shield";
             Sprite =
                 "0bbbbbb0" +
                 "0brrrrb0" +
@@ -107,9 +110,10 @@ namespace MineCraftInventory
     /// </summary>
     internal class Potion : Consumable
     {
-        public Potion(int ammount =1)
+        public Potion(int ammount = 1)
         {
             Ammount = ammount;
+            Name = "Potion";
             isStackable = true;
             MaxAmmount = 16;
             Sprite =
@@ -128,14 +132,15 @@ namespace MineCraftInventory
 
     internal class Apple : Consumable
     {
-        public Apple(int ammount =1)
+        public Apple(int ammount = 1)
         {
             Ammount = ammount;
+            Name = "Apple";
             isStackable = true;
             MaxAmmount = 64;
             Sprite =
                 "00rrgr00" +
-                "0rrgrwr0" +
+                "0rrrrwr0" +
                 "0rrrrrr0" +
                 "00rrrr00";
         }
@@ -147,6 +152,7 @@ namespace MineCraftInventory
         public Iron(int ammount = 1)
         {
             Ammount = ammount;
+            Name = "Iron";
             isStackable = true;
             MaxAmmount = 64;
             Sprite =
@@ -159,9 +165,10 @@ namespace MineCraftInventory
 
     internal class Wood : Material
     {
-        public Wood(int ammount =1)
+        public Wood(int ammount = 1)
         {
             Ammount = ammount;
+            Name = "Wood";
             isStackable = true;
             MaxAmmount = 64;
             Sprite =

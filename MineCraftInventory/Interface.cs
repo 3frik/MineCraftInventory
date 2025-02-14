@@ -222,6 +222,18 @@ namespace MineCraftInventory
             return activeIndex;
         }
 
+        public int ActiveItemIndexInEquipmentInventory()
+        {
+            return activeColumn-1;
+
+        }
+
+        public int ActiveItemIndexInCraftingInventory()
+        {
+            return activeColumn - 6;
+
+        }
+
         /// <summary>
         /// Draws an item in the inventory
         /// </summary>
@@ -326,11 +338,11 @@ namespace MineCraftInventory
                     {
                         if (activeColumn == 0 || activeColumn == 8)
                         {
-                            activeColumn=1;
+                            activeColumn = 1;
                         }
                         else if (activeColumn == 3 || activeColumn == 4)
                         {
-                            activeColumn=5;
+                            activeColumn = 5;
                         }
                     }
                     break;
