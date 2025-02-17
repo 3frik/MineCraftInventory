@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace MineCraftInventory
     internal class Item
     {
         public string Sprite { get; set; }
-        public int Ammount;
+        public int Ammount = 1;
         public bool isStackable = false;
         public int MaxAmmount = 1;
         public string Name;
@@ -30,6 +31,10 @@ namespace MineCraftInventory
         }
 
         public virtual void Use() { }
+        public virtual Item Clone(int ammount = 1)
+        {
+            return new Item();
+        }
     }
 
     /// <summary>
@@ -86,8 +91,37 @@ namespace MineCraftInventory
                 "ww000000";
         }
 
+        public override Item Clone(int ammount = 1)
+        {
+            return new Weapon(this.Ammount);
+        }
+
     }
 
+    /// <summary>
+    /// Second Child Equipment/Weapon
+    /// </summary>
+    internal class Bow : Equipment
+    {
+        public string Name;
+
+        public Bow (int ammount = 1)
+        {
+            Ammount = ammount;
+            Name = "weapon";
+            Sprite =
+                "0000mmmm" +
+                "00mm0000" +
+                "0m000000" +
+                "0m000000";
+        }
+
+        public override Item Clone(int ammount = 1)
+        {
+            return new Bow(this.Ammount);
+        }
+
+    }
     /// <summary>
     /// Second Child Equipment/Shield
     /// </summary>
@@ -102,6 +136,11 @@ namespace MineCraftInventory
                 "0brrrrb0" +
                 "0brrrrb0" +
                 "00bbbb00";
+        }
+
+        public override Item Clone(int ammount = 1)
+        {
+            return new Shield(this.Ammount);
         }
     }
 
@@ -128,6 +167,10 @@ namespace MineCraftInventory
             this.Ammount--;
             Console.Beep(300, 300);
         }
+        public override Item Clone(int ammount = 1)
+        {
+            return new Potion(this.Ammount);
+        }
     }
 
     internal class Apple : Consumable
@@ -143,6 +186,10 @@ namespace MineCraftInventory
                 "0rrrrwr0" +
                 "0rrrrrr0" +
                 "00rrrr00";
+        }
+        public override Item Clone(int ammount = 1)
+        {
+            return new Apple(this.Ammount);
         }
 
     }
@@ -161,6 +208,10 @@ namespace MineCraftInventory
                 "00wdddb0" +
                 "0wdddb00";
         }
+        public override Item Clone(int ammount = 1)
+        {
+            return new Iron(this.Ammount);
+        }
     }
 
     internal class Wood : Material
@@ -176,6 +227,10 @@ namespace MineCraftInventory
                 "0000mmmm" +
                 "00mmm000" +
                 "0mmm0000";
+        }
+        public override Item Clone(int ammount = 1)
+        {
+            return new Wood(this.Ammount);
         }
     }
 }

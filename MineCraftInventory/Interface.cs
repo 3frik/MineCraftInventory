@@ -52,13 +52,14 @@ namespace MineCraftInventory
 
             ///DRAW INVENTORY AREA (including backgrounds)
             //active slot
-            Console.BackgroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Blue;
             for (int i = 0; i < SLOT_HEIGHT; i++)
             {
                 Console.SetCursorPosition(INVENTORY_AREA_LEFT + activeColumn * (SLOT_WIDTH + SPACE_BETWEEN_SLOTS), INVENTORY_AREA_TOP + activeRow * (SLOT_HEIGHT + SPACE_BETWEEN_SLOTS) + i);
                 Console.WriteLine(new string(' ', SLOT_WIDTH));
             }
 
+            /*
             //selected slot
             if (selectedRow >= 0 && selectedColumn >= 0)
             {
@@ -69,6 +70,7 @@ namespace MineCraftInventory
                     Console.WriteLine(new string(' ', SLOT_WIDTH));
                 }
             }
+            */
 
             //paint white light
             Console.BackgroundColor = ConsoleColor.White;
@@ -230,7 +232,7 @@ namespace MineCraftInventory
 
         public int ActiveItemIndexInCraftingInventory()
         {
-            return activeColumn - 6;
+            return activeColumn - 5;
 
         }
 

@@ -78,7 +78,7 @@ namespace MineCraftInventory
             {
                 if (item.Ammount > 0 && items[i] == null)   //as long there are items to save and an empty slot is found
                 {
-                    items[i] = (Item)Activator.CreateInstance(item.GetType(), new object[] {item.Ammount});    //create in the slot a new item      
+                    items[i] = item.Clone();   //create in the slot a new item      
                     items[i].Ammount = item.Ammount;    //dump all items in the slot
                     item.Ammount -= items[i].MaxAmmount;    //Remove a whole stack from the original item (may become negative)
                     if (items[i].Ammount > items[i].MaxAmmount) //if we had dumped more than a stack
@@ -114,7 +114,7 @@ namespace MineCraftInventory
             {
                 if (equipments[i] == null)
                 {   //if the item is in the inventory and there is place for more items
-                    equipments[i] = item;   //then add the items
+                    equipments[i] = item.Clone();   //then add the items
                     break;
                 }
             }
@@ -126,7 +126,6 @@ namespace MineCraftInventory
         /// <param name="equipmentIndex"></param>
         private void RemoveItemFromEquipment(int equipmentIndex)
         {
-            AddItemToInventory(equipments[equipmentIndex]);
             equipments[equipmentIndex] = null;
         }
 
@@ -141,20 +140,24 @@ namespace MineCraftInventory
             {
                 if (craftings[i] == null)
                 {   //if the item is in the inventory and there is place for more items
-                    Console.WriteLine(" vs " + item.Ammount);
-                    craftings[i] = item;                                        ////////THIS IS NOT DOING A COPY BUT A REFERENCE
+                    craftings[i] = item.Clone();                                        
                     craftings[i].Ammount = ammountToAdd;
-                    Console.ReadKey();
                     break;
                 }
             }
-            if (craftings[0]!=null && craftings[1]!=null){
+            UpdateCraftingResult();
+        }
+
+        private void UpdateCraftingResult()
+        {
+            if (craftings[0] != null && craftings[1] != null)
+            {
                 List<Type> types = new();
                 types.Add(craftings[0].GetType());
-                types.Add(craftings[1].GetType()) ;
-                if(types.Contains(new Iron().GetType()))
+                types.Add(craftings[1].GetType());
+                if (types.Contains(new Iron().GetType()))
                 {
-                    if(types.Contains(new Wood().GetType()))
+                    if (types.Contains(new Wood().GetType()))
                     {
                         craftings[2] = new Shield();
                     }
@@ -176,8 +179,9 @@ namespace MineCraftInventory
         /// <param name="craftingIndex"></param>
         private void RemoveItemFromCrafting(int craftingIndex)
         {
-            AddItemToInventory(craftings[craftingIndex]);
+            AddItemToInventory(craftings[craftingIndex].Clone());
             craftings[craftingIndex] = null;
+            UpdateCraftingResult();
         }
 
         /// <summary>
@@ -234,11 +238,21 @@ namespace MineCraftInventory
                             UseItem(SelectActiveItem());
                             break;
                         case > -3:
+                            int index = iface.ActiveItemIndexInEquipmentInventory();
+                            AddItemToInventory(equipments[index]);
                             RemoveItemFromEquipment(iface.ActiveItemIndexInEquipmentInventory());
                             break;
                         case > -8:
-                            RemoveItemFromCrafting(iface.ActiveItemIndexInCraftingInventory());
-                            break;
+                            AddItemToInventory(craftings[iface.ActiveItemIndexInCraftingInventory()]);
+                            if (iface.ActiveItemIndexInCraftingInventory() == 2)
+                            {
+                                craftings = new Item[3];
+                            }
+                            else
+                            {
+                                RemoveItemFromCrafting(iface.ActiveItemIndexInCraftingInventory());
+                            }
+                                break;
                     }
                     break;
             }
