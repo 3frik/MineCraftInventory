@@ -30,7 +30,6 @@ namespace MineCraftInventory
         int EQUIPMENT_AREA_TOP = 24;
         int EQUIPMENT_AREA_LEFT = 14;
 
-
         public Interface()
         {
             Console.ForegroundColor = ConsoleColor.Black;

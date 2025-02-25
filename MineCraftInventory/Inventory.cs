@@ -19,7 +19,7 @@ namespace MineCraftInventory
             AddItemToInventory(new Wood(20));
             AddItemToInventory(new Wood(30));
             AddItemToInventory(new Potion());
-            AddItemToInventory(new Wood(500));
+            AddItemToInventory(new Potion(20));
             AddItemToInventory(new Wood(30));
             AddItemToInventory(new Shield());
             AddItemToInventory(new Iron(30));
@@ -29,8 +29,6 @@ namespace MineCraftInventory
         public void Run()
         {
             bool inventorying = true;
-            Console.WriteLine("Doing");
-            Console.ReadKey();
             while (inventorying)
             {
                 iface.DrawWindow();
@@ -108,16 +106,17 @@ namespace MineCraftInventory
         /// Adds one item to the Equipments if there is place for it. The item should be Equipement.
         /// </summary>
         /// <param name="item"></param>
-        private void AddItemToEquipment(Item item)
+        private bool AddItemToEquipment(Item item)
         {
             for (int i = 0; i < equipments.Length; i++)
             {
                 if (equipments[i] == null)
                 {   //if the item is in the inventory and there is place for more items
                     equipments[i] = item.Clone();   //then add the items
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
         /// <summary>
@@ -263,8 +262,10 @@ namespace MineCraftInventory
         {
             if (item is Equipment)
             {
-                AddItemToEquipment(item);
-                RemoveItemFromInventory(iface.ActiveItemIndex());
+                if (AddItemToEquipment(item))
+                {
+                    RemoveItemFromInventory(iface.ActiveItemIndex());
+                }
             }
             else if (item is Material)
             {
